@@ -2,16 +2,38 @@
 #define FILTERTEST_H
 
 #include <QObject>
+#include <QAbstractVideoFilter>
+#include <QDebug>
 
-class FilterTest : public QObject
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+
+/**
+ * @brief The FilterTest class
+ */
+class FilterTest : public QAbstractVideoFilter
 {
     Q_OBJECT
+
+private:
+    friend class FilterTestRunnable;
+
 public:
-    explicit FilterTest(QObject *parent = 0);
+    QVideoFilterRunnable *createFilterRunnable();
+};
 
-signals:
+/**
+ * @brief The FilterTestRunnable class
+ */
+class FilterTestRunnable : public QVideoFilterRunnable
+{
+private:
+    FilterTest *m_filter;
 
-public slots:
+public:
+    FilterTestRunnable(FilterTest *filter) : m_filter(filter) { }
+    QVideoFrame run(QVideoFrame *input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags);
 };
 
 #endif // FILTERTEST_H

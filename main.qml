@@ -1,16 +1,26 @@
-import QtQuick 2.7
-import QtQuick.Window 2.2
+import QtQuick 2.0
+import QtMultimedia 5.4
+import camera.filter.test 1.0
 
-Window {
+Rectangle {
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
+    color: "black"
 
-    MainForm {
+    Camera {
+        id: camera
+        viewfinder.resolution: "1280x720"
+    }
+
+    VideoOutput {
+        id: videoOutput
+        source: camera
         anchors.fill: parent
-        mouseArea.onClicked: {
-            console.log(qsTr('Clicked on background. Text: "' + textEdit.text + '"'))
-        }
+        autoOrientation: true
+
+        filters: [ filterTest ]
+    }
+
+    FilterTest {
+        id: filterTest
     }
 }
