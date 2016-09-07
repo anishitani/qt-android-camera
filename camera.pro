@@ -24,7 +24,6 @@ android {
 
         INCLUDEPATH += $$OPENCV_ROOT/sdk/native/jni/include
 
-        LIBS        += -L$$OPENCV_ROOT/sdk/native/libs/armeabi-v7a
         LIBS        += $$files($$OPENCV_ROOT/sdk/native/libs/armeabi-v7a/*.a)
         LIBS        += $$files($$OPENCV_ROOT/sdk/native/3rdparty/libs/armeabi-v7a/*.a)
     }
