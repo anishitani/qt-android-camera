@@ -8,7 +8,7 @@ Rectangle {
 
     Camera {
         id: camera
-        viewfinder.resolution: "1280x720"
+        viewfinder.resolution: "1920x1080"
     }
 
     VideoOutput {
