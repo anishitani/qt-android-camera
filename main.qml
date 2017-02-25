@@ -1,6 +1,6 @@
-import QtQuick 2.0
-import QtMultimedia 5.4
-import camera.filter.test 1.0
+import QtQuick 2.5
+import QtMultimedia 5.5
+import FilterTest 1.0
 
 Rectangle {
     visible: true
@@ -8,7 +8,6 @@ Rectangle {
 
     Camera {
         id: camera
-        viewfinder.resolution: "1920x1080"
     }
 
     VideoOutput {

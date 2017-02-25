@@ -5,23 +5,40 @@ QVideoFilterRunnable* FilterTest::createFilterRunnable()
     return new FilterTestRunnable(this);
 }
 
-QVideoFrame FilterTestRunnable::run(QVideoFrame *input, const QVideoSurfaceFormat &surface, RunFlags flags){
-    Q_UNUSED(surface);
-    Q_UNUSED(flags);
+QVideoFrame FilterTestRunnable::run(QVideoFrame *input,
+                                    const QVideoSurfaceFormat &surfaceFormat,
+                                    QVideoFilterRunnable::RunFlags flags)
+{
+    if (!input->isValid())
+        return *input;
 
-    cv::Mat m(input->height(),input->width(),CV_8UC3);
-    cv::Mat out(input->height(),input->width(),CV_8UC3);
+    QAbstractVideoBuffer::MapMode mode = input->mapMode();
 
-    input->map(QAbstractVideoBuffer::ReadOnly);
+    input->map(QAbstractVideoBuffer::ReadWrite);
+        if(input->isReadable()){
+            qWarning() << "Is readable!";
+            if(input->isWritable()){
+                qWarning() << "Is writable!";
+                this->deleteColorComponentFromYUV(input);
+                cv::Mat mat(input->height(),input->width(), CV_8UC1, input->bits()); // create grayscale mat with input's Ys only and avoid additional color conversion and copying
 
-    if(input->isMapped() && input->isReadable()){
-        m = cv::Mat(input->height(),input->width(),CV_8UC3,input->bits());
-        out = cv::Mat(input->height(),input->width(),CV_8UC3);
-        cv::cvtColor(m,out,CV_YUV2BGR);
-    }
+                cv::GaussianBlur(mat, mat, cv::Size(7,7), 1.5, 1.5);
+                cv::Canny(mat, mat, 0, 30, 3);
+            }
+        }
+        input->unmap();
 
-    QImage image(m.data,m.cols,m.rows,QImage::Format_RGB444);
-    QVideoFrame frame(image);
 
-    return frame;
+    return *input;
+}
+
+void FilterTestRunnable::deleteColorComponentFromYUV(QVideoFrame *input)
+{
+    // Assign 0 to Us and Vs
+    int firstU = input->width()*input->height(); // if i correctly understand YUV420
+    int lastV = input->width()*input->height() + input->width()*input->height()/4*2;
+    uchar* inputBits = input->bits();
+
+    for (int i=firstU; i<lastV; i++)
+        inputBits[i] = 0;
 }

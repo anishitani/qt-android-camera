@@ -1,6 +1,8 @@
 #ifndef FILTERTEST_H
 #define FILTERTEST_H
 
+#include <iostream>
+
 #include <QObject>
 #include <QAbstractVideoFilter>
 #include <QDebug>
@@ -31,6 +33,7 @@ class FilterTestRunnable : public QVideoFilterRunnable
 private:
     FilterTest *m_filter;
 
+    void deleteColorComponentFromYUV(QVideoFrame *input);
 public:
     FilterTestRunnable(FilterTest *filter) : m_filter(filter) { }
     QVideoFrame run(QVideoFrame *input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags);

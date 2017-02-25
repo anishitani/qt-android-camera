@@ -32,7 +32,6 @@ android {
         LIBS        += -lz -lm
     }
 } else {
-
     CONFIG += link_pkgconfig
     PKGCONFIG += opencv
 }

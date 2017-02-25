@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<FilterTest>("camera.filter.test", 1, 0, "FilterTest");
+    qmlRegisterType<FilterTest>("FilterTest", 1, 0, "FilterTest");
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
